@@ -1,4 +1,5 @@
 ﻿using OnlineDB.HelperClasses;
+using OnlineDB.Model.SettingsManagee;
 using OnlineDB.Model.StructureManager;
 using OnlineDB.Service.Interfaces;
 
@@ -6,7 +7,8 @@ namespace OnlineDB.Service
 {
     public class StructureManagerService : IStructureManagerService
     {
-        private string _basePath = "..\\..\\..\\UserStructure";
+        private string _basePath = "UserStructure";
+        private AppSettingsManager _appSettingsManager = new AppSettingsManager();
 
         public async Task<Status> CreateStructureForUser(CreateStructureForUserModel model, string userID)
         {
@@ -21,6 +23,12 @@ namespace OnlineDB.Service
                     {
                         using (FileStream fs = new FileStream($"{fullpath}\\{item.name}.dat", FileMode.Create)) { }
                     }
+
+                    CreateSettingsFileModel createSettingsFileModel = new CreateSettingsFileModel();
+                    createSettingsFileModel.path = fullpath;
+                    createSettingsFileModel.dataBaseColumns = model.dataBaseColumns;
+                    _appSettingsManager.CreateSettingsFile(createSettingsFileModel);
+
                 }
                 else
                 {
@@ -108,6 +116,11 @@ namespace OnlineDB.Service
                     {
                         using (FileStream fs = new FileStream($"{basepath}\\{item.name}.dat", FileMode.Create)) { }
                     }
+
+                    CreateSettingsFileModel createSettingsFileModel = new CreateSettingsFileModel();
+                    createSettingsFileModel.path = basepath;
+                    createSettingsFileModel.dataBaseColumns = model.dataBaseColumns;
+                    _appSettingsManager.CreateSettingsFile(createSettingsFileModel);
                 }
             }
             else
