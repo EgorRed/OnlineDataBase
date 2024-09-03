@@ -2,6 +2,7 @@
 {
     public enum TypeColums
     {
+        UNDEFINED,
         INTEGER,
         STRING
     }
@@ -18,6 +19,9 @@
                     break;
                 case "STRING":
                     this.type = TypeColums.STRING;
+                    break;
+                default:
+                    this.type = TypeColums.UNDEFINED;
                     break;
             }
         }

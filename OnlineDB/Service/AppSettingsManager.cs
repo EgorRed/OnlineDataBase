@@ -12,15 +12,12 @@ namespace OnlineDB.Service
             List<Columns> listOfColumns = new List<Columns>();
             using (BinaryReader br = new BinaryReader(File.Open($"{model.path}\\listOfTypes.inf", FileMode.OpenOrCreate)))
             {
-                //DirectoryInfo dir = new DirectoryInfo(model.path);
-                //var listOfFiles = dir.GetFiles().Select(x => x.Name).ToList();
                 while (br.PeekChar() > -1)
                 {
                     string colName = br.ReadString();
                     string colType = br.ReadString();
                     Columns col = new Columns(colName, colType);
                     listOfColumns.Add(col);
-                    //if (item.Name.Equals("listOfTypes.txt")) continue;
                 }
             }
 
@@ -43,9 +40,23 @@ namespace OnlineDB.Service
             return new Status(RequestStatus.OK, "Creating of column is success!");
         }
 
-        //public async Outcome<OutGetAppSettingsDataModel> GetAppSettingsData(InGetAppSettingsDataModel model)
-        //{
-           
-        //}
+        public async Outcome<OutGetAppSettingsDataModel> GetAppSettingsData(InGetAppSettingsDataModel model)
+        {
+            OutGetAppSettingsDataModel outGetAppSettingsDataModel = new OutGetAppSettingsDataModel();
+            //List<Columns> listOfColumns = new List<Columns>();
+            using (BinaryReader br = new BinaryReader(File.Open($"{model.path}\\listOfTypes.inf", FileMode.OpenOrCreate)))
+            {
+                while (br.PeekChar() > -1)
+                {
+                    ColumnsModel col = new ColumnsModel();
+                    col.name = br.ReadString();
+                    col.type = br.ReadString();
+                     
+                    outGetAppSettingsDataModel.dataBaseColumns.Add(col);
+                }
+            }
+
+            return new Outcome<OutGetAppSettingsDataModel>(new Status(RequestStatus.OK, "ok"), outGetAppSettingsDataModel);
+        }
     }
 }
